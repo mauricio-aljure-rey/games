@@ -5,7 +5,6 @@ import time
 class Food(turtle.Turtle):
     def __init__(self, game_height_limit, game_width_limit, snake_parts_size, food_size, snake):
         super().__init__()
-        # TODO: change shappe to an apple. A giff file must be imported.
         self.shape("turtle")
         self.color("red")
         self.penup()

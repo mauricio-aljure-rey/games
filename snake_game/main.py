@@ -9,6 +9,7 @@ screen_height = 800 # pixels
 screen_udpate_time = 0.1 # seconds
 repeat_game_forever = True
 
+
 def onkey_up():
     if game_on:
         snake.up()
