@@ -10,7 +10,7 @@ class Ball(turtle.Turtle):
         self.penup()
         self.color("white")
         self.ball_size = BALL_SIZE
-        self.shapesize(round(BALL_SIZE / 20), round(BALL_SIZE / 20), 0)
+        self.shapesize(BALL_SIZE / 20, BALL_SIZE / 20, 0)
         self.speed("fastest")
         self.xdir = 2
         self.ydir = 2

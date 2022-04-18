@@ -107,10 +107,6 @@ while game_on:
         time.sleep(1)
         ball.xdir *= -1
 
-
-
-
-
     screen.update()
     time.sleep(0.01)
 
