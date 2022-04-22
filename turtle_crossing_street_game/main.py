@@ -8,16 +8,20 @@ from scoreboard import Scoreboard
 
 def move_up_turtle():
     global player_released
-    if player_released:
-        if game_on:
-            player_turtle.move_up()
+    global player_can_up
+    if player_released: # Waiting until populating with cars the game
+        if game_on: # Checking that the player is still playing
+            if player_can_up:
+                player_turtle.move_up()
 
 
 # Constants
 LINES_SIZE = 50
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 900
 GAME_HEIGHT_LIMIT = SCREEN_HEIGHT - LINES_SIZE * 4
+KEEP_PLAYING = True
+
 
 # Setting up the screen
 screen = Screen()
@@ -43,8 +47,9 @@ player_released = False
 
 while game_on:
     # Updating routines
-    time.sleep(0.1)
-    screen.update()
+    if player_released:
+        time.sleep(0.1)
+        screen.update()
     car_manager.update_cars()
 
     # Waiting for cars to populate the game
@@ -59,14 +64,33 @@ while game_on:
         car_manager.increase_speed()
 
     # Detecting collisions
+    player_can_up_flag = True
     for car in car_manager.car_list:
+        # Avoiding collision with lower edge of car
+        if player_turtle.ycor() + LINES_SIZE == car.ycor():
+            if abs(player_turtle.xcor() - car.xcor()) <= car_manager.car_width/2 + player_turtle.shape_factor * LINES_SIZE:
+                # Avoid turtle moving up
+                player_can_up_flag = False
+
         if player_turtle.ycor() == car.ycor():
             if abs(player_turtle.xcor() - car.xcor()) \
                     < car_manager.car_width/2 + player_turtle.shape_factor/2 * LINES_SIZE:
                 # Collision occurred
-                print("Collision occurred")
-                game_on = False
-                score_board.game_over()
-                screen.update()
+                if KEEP_PLAYING == False:
+                    game_on = False
+                    score_board.game_over()
+                    screen.update()
+                else:
+                    time.sleep(2)
+                    score_board.score = -1
+                    score_board.score_up()
+                    player_turtle.init_pos()
+                    car_manager.cars_step = car_manager.cars_step_ini
+                    car_manager.car_delay = car_manager.car_delay_min * 2
+
+    if player_can_up_flag:
+        player_can_up = True
+    else:
+        player_can_up = False
 
 screen.exitonclick()

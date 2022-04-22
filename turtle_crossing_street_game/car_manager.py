@@ -4,9 +4,9 @@ import random
 COLORS = ["red", "orange", "green", "blue", "purple"]
 STARTING_MOVE_DISTANCE = 5
 CARS_STEP = 5
-CAR_WIDTH_FACTOR = 2 # Times the lines_size
-CAR_DELAY_FACTOR = 0.5
+CAR_WIDTH_FACTOR = 2  # Times the lines_size
 SPEED_UP = 2
+CAR_DELAY_FACTOR = 2
 
 
 class CarManager:
@@ -17,6 +17,7 @@ class CarManager:
         self.lines_size = lines_size
         self.game_height_limit = game_height_limit
         self.screen_width = screen_width
+        self.cars_step_ini = CARS_STEP
         self.cars_step = CARS_STEP
         self.car_delay_min = self.car_width / self.cars_step
         self.car_delay = self.car_delay_min * CAR_DELAY_FACTOR
@@ -33,19 +34,19 @@ class CarManager:
             new_car.resizemode("user")
             new_car.shapesize(stretch_wid=(self.car_height / 20), stretch_len=(self.car_width / 20), outline=0)
             new_car.color(random.choice(COLORS))
-            # Checking that it is not produced on top off another car
+            # Checking that it is not produced on top of another car
             check_flag = True
             while check_flag:
                 check_flag = False
-                y_pos = self.lines_size * round(self.game_height_limit * (random.random() - 1/2) / self.lines_size)
-                if self.car_list: # In case there are no cars in the list
+                y_pos = self.lines_size * round(self.game_height_limit * (random.random() - 1 / 2) / self.lines_size)
+                if self.car_list:  # In case there are no cars in the list
                     for car in self.car_list:
                         if car.ycor() == y_pos:
-                            if car.xcor() < -self.screen_width/2 + self.car_width * 2:
+                            if car.xcor() < -self.screen_width / 2 + self.car_width * 2:
                                 check_flag = True
                 else:
                     check_flag = False
-            new_car.setpos((-self.screen_width/2, y_pos))
+            new_car.setpos((-self.screen_width / 2, y_pos))
             self.car_list.append(new_car)
 
     def move_cars(self):
@@ -59,10 +60,11 @@ class CarManager:
 
     def delete_cars(self):
         for idx, car in enumerate(self.car_list):
-            if car.xcor() > self.screen_width/2 * 1.2:
+            if car.xcor() > self.screen_width / 2 * 1.2:
                 car.backward(self.cars_step)
                 car.ht()
                 self.car_list.pop(idx)
 
     def increase_speed(self):
         self.cars_step += SPEED_UP
+        self.car_delay /= (round(SPEED_UP)/1.5)
