@@ -6,9 +6,13 @@ BACKGROUND_COLOR = "#B1DDC6"
 
 
 def select_next_card():
-    global next_word_base_lang, checking
+    global next_word_base_lang, checking, next_word
     checking = False
-    next_word = data.sample()
+    while True:
+        next_word = data.sample()
+        if next_word.iloc[0]["num_rights"] < 3:
+            break
+
     next_word_target_lang = next_word.iat[0, 0]
     next_word_base_lang = next_word.iat[0, 1]
     canvas.itemconfigure(word_text, text=next_word_target_lang)
@@ -32,6 +36,8 @@ def turn_over():
 
 
 def on_press_right():
+    index = next_word.index.tolist()[0]
+    data.at[index, "num_rights"] += 1
     select_next_card()
 
 
@@ -46,6 +52,10 @@ def on_press_flip():
         turn_over()
 
 
+def before_closing():
+    data.to_csv("data/Swedish_Words.csv", index=False)
+    print(data)
+    window.destroy()
 
 #-------- Creating UI ---------#
 
@@ -53,6 +63,7 @@ def on_press_flip():
 window = Tk()
 window.title = "Pomodoro Technique Manager"
 window.config(padx=10, pady=10, bg=BACKGROUND_COLOR)
+window.protocol("WM_DELETE_WINDOW", before_closing)
 
 # Creating canvas for flash card back and front
 canvas_width = 250
@@ -81,12 +92,22 @@ flip_button.grid(row=1, column=0)
 # Creating text
 language_text = canvas.create_text(canvas_width/2, canvas_height/5, text="", font=("Ariel", 10, "italic"))
 word_text = canvas.create_text(canvas_width/2, canvas_height/2, text="", font=("Ariel", 30, "bold"))
+progress_text = canvas.create_text(canvas_width*8/9, canvas_height*8/9, text="", font=("Ariel", 7))
 
+#-------- Reading the language file ---------#
 # Reading the csv file
 data = pandas.read_csv("data/Swedish_Words.csv")
 target_lang = data.keys().tolist()[0]
 base_lang = data.keys().tolist()[1]
-#next_word = data.sample().iat[0, 0]
+try:
+    num_rights = data.num_rights()
+except Exception as exemption_message:
+    print(exemption_message)
+    data["num_rights"] = 0
+
+total_cards = len(data)
+cards_to_learn = len(data[data["num_rights"] < 3])
+canvas.itemconfigure(progress_text, text=f"{cards_to_learn}/{total_cards}")
 select_next_card()
 
 
