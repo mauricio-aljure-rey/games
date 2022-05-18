@@ -68,7 +68,7 @@ window.config(padx=10, pady=10, bg=BACKGROUND_COLOR)
 window.protocol("WM_DELETE_WINDOW", before_closing)
 
 # Creating canvas for flash card back and front
-canvas_width = 500
+canvas_width = 700
 canvas_height = 300
 canvas = Canvas(width=canvas_width, height=canvas_height, bg=BACKGROUND_COLOR, highlightthickness=0)
 card_back_img = PhotoImage(file="images/card_back.png")
@@ -93,7 +93,7 @@ flip_button.grid(row=1, column=0)
 
 # Creating text
 language_text = canvas.create_text(canvas_width/2, canvas_height/5, text="", font=("Ariel", 10, "italic"))
-word_text = canvas.create_text(canvas_width/2, canvas_height/2, text="", font=("Ariel", 30, "bold"))
+word_text = canvas.create_text(canvas_width/2, canvas_height/2, text="", font=("Ariel", 20, "bold"))
 progress_text = canvas.create_text(canvas_width*8/9, canvas_height*8/9, text="", font=("Ariel", 7))
 
 #-------- Reading the language file ---------#
