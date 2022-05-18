@@ -20,6 +20,7 @@ def select_next_card():
     canvas.itemconfigure(flash_card, image=card_front_img)
     wrong_button["state"] = "disabled"
     right_button["state"] = "disabled"
+    flip_button["state"] = "normal"
     canvas.update()
 
 
@@ -29,6 +30,7 @@ def turn_over():
     canvas.itemconfigure(word_text, text=next_word_base_lang)
     wrong_button["state"] = "normal"
     right_button["state"] = "normal"
+    flip_button["state"] = "disabled"
     canvas.update()
     # window.after(3000)
     # canvas.itemconfigure(flash_card, image=card_front_img)
@@ -54,20 +56,20 @@ def on_press_flip():
 
 def before_closing():
     data.to_csv("data/Swedish_Words.csv", index=False)
-    print(data)
+    print("Good bye!")
     window.destroy()
 
 #-------- Creating UI ---------#
 
 # Creating window
 window = Tk()
-window.title = "Pomodoro Technique Manager"
+window.title = "Flash Cards Learning tool"
 window.config(padx=10, pady=10, bg=BACKGROUND_COLOR)
 window.protocol("WM_DELETE_WINDOW", before_closing)
 
 # Creating canvas for flash card back and front
-canvas_width = 250
-canvas_height = 100
+canvas_width = 500
+canvas_height = 300
 canvas = Canvas(width=canvas_width, height=canvas_height, bg=BACKGROUND_COLOR, highlightthickness=0)
 card_back_img = PhotoImage(file="images/card_back.png")
 card_front_img = PhotoImage(file="images/card_front.png")
@@ -75,11 +77,11 @@ flash_card = canvas.create_image(canvas_width/2, canvas_height/2, image=card_fro
 canvas.grid(row=0, column=0, columnspan=3)
 
 # Creating buttons
-wrong_img = Image.open("images/wrong.png").resize((50, 50))
+wrong_img = Image.open("images/wrong.png").resize((int(canvas_width/5), int(canvas_width/5)))
 wrong_img = ImageTk.PhotoImage(wrong_img)
-right_img = Image.open("images/right.png").resize((50, 50))
+right_img = Image.open("images/right.png").resize((int(canvas_width/5), int(canvas_width/5)))
 right_img = ImageTk.PhotoImage(right_img)
-flip_img = Image.open("images/flip.png").resize((50, 50))
+flip_img = Image.open("images/flip.png").resize((int(canvas_width/5), int(canvas_width/5)))
 flip_img = ImageTk.PhotoImage(flip_img)
 wrong_button = Button(image=wrong_img, highlightthickness=0, command=on_press_wrong)
 right_button = Button(image=right_img, highlightthickness=0, command=on_press_right)

@@ -704,7 +704,7 @@ barn,baby,0
 by,village,0
 möts,meet,0
 rot,root,0
-köpa,buy,1
+köpa,buy,0
 höja,raise,0
 lösa,solve,0
 metall,metal,0
@@ -979,7 +979,7 @@ buller,noise,0
 nivå,level,0
 chans,chance,0
 samla,gather,0
-butik,shop,1
+butik,shop,0
 sträcka,stretch,0
 kasta,throw,0
 glans,shine,0
