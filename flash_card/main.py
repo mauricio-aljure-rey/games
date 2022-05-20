@@ -3,18 +3,21 @@ import pandas
 from PIL import Image, ImageTk
 
 BACKGROUND_COLOR = "#B1DDC6"
+canvas_width = 700
+canvas_height = 500
 
 
 def select_next_card():
-    global next_word_base_lang, checking, next_word
+    global checking, next_word
     checking = False
     while True:
         next_word = data.sample()
         if next_word.iloc[0]["num_rights"] < 3:
             break
-
+    canvas.itemconfigure(word_translated_text, state='hidden')
     next_word_target_lang = next_word.iat[0, 0]
     next_word_base_lang = next_word.iat[0, 1]
+    canvas.itemconfigure(word_translated_text, text=next_word_base_lang)
     canvas.itemconfigure(word_text, text=next_word_target_lang)
     canvas.itemconfigure(language_text, text=target_lang)
     canvas.itemconfigure(flash_card, image=card_front_img)
@@ -25,16 +28,13 @@ def select_next_card():
 
 
 def turn_over():
+    canvas.itemconfigure(word_translated_text, state='normal')
     canvas.itemconfigure(flash_card, image=card_back_img)
     canvas.itemconfigure(language_text, text=base_lang)
-    canvas.itemconfigure(word_text, text=next_word_base_lang)
     wrong_button["state"] = "normal"
     right_button["state"] = "normal"
     flip_button["state"] = "disabled"
     canvas.update()
-    # window.after(3000)
-    # canvas.itemconfigure(flash_card, image=card_front_img)
-    # canvas.itemconfigure(language_text, text=target_lang)
 
 
 def on_press_right():
@@ -68,8 +68,7 @@ window.config(padx=10, pady=10, bg=BACKGROUND_COLOR)
 window.protocol("WM_DELETE_WINDOW", before_closing)
 
 # Creating canvas for flash card back and front
-canvas_width = 700
-canvas_height = 300
+
 canvas = Canvas(width=canvas_width, height=canvas_height, bg=BACKGROUND_COLOR, highlightthickness=0)
 card_back_img = PhotoImage(file="images/card_back.png")
 card_front_img = PhotoImage(file="images/card_front.png")
@@ -94,7 +93,10 @@ flip_button.grid(row=1, column=0)
 # Creating text
 language_text = canvas.create_text(canvas_width/2, canvas_height/5, text="", font=("Ariel", 10, "italic"))
 word_text = canvas.create_text(canvas_width/2, canvas_height/2, text="", font=("Ariel", 20, "bold"))
+word_translated_text = canvas.create_text(canvas_width/2, canvas_height*3/4, text="whatever", font=("Ariel", 20, "normal"))
+# canvas.itemconfigure(word_translated_text, state='hidden')
 progress_text = canvas.create_text(canvas_width*8/9, canvas_height*8/9, text="", font=("Ariel", 7))
+
 
 #-------- Reading the language file ---------#
 # Reading the csv file
