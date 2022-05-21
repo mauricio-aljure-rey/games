@@ -15,7 +15,7 @@ ow_param = {
 }
 
 # yr configuration
-yr_endpoint = "https://api.met.no/weatherapi/locationforecast/2.0/complete"
+yr_endpoint = "https://api.met.no/weatherapi/locationforecast/2.0/compact"
 yr_param = {
     "lat": lat,
     "lon": lon,
@@ -26,12 +26,45 @@ yr_headers = {
 }
 
 endpoint = {
-    "endpoint":yr_endpoint,
+    "endpoint": yr_endpoint,
     "params": yr_param
 }
 
 answer = requests.get(endpoint["endpoint"], params=endpoint["params"], headers=yr_headers)
-data = answer.json()
-#data = data["properties"]["timeseries"]
 
-print(json.dumps(data, indent=2))
+data = answer.json()
+# Obtaining a list of dictionaries, hour by hour.
+# First key is "time" in format "2022-05-21T13:00:00Z"
+# Key "data" is a dictionary with dictionaries.
+data = data["properties"]["timeseries"]
+
+# Creating a new list of dictionaries with the information from the precipitation only.
+# This I might use later when attempting to forecast the solar panel productivity.
+next_hour_rain_data = []
+for idx, item in enumerate(data):
+    try:
+        next_hour_rain_data.append({
+            "time": item["time"],
+            "precipitation_amount": item["data"]["next_1_hours"]["details"]["precipitation_amount"],
+        })
+    except KeyError:
+        pass
+
+# Going through the data and collecting when it is raining.
+# This is what it is actually required for the course.
+raining_at = []
+for item in next_hour_rain_data:
+    if item["precipitation_amount"] > 0:
+        raining_at.append({
+            "day": item["time"].split("T")[0],
+            "hour": item["time"].split("T")[1][0:1],
+            "amount": item["precipitation_amount"]
+        })
+
+if raining_at:
+    print("It is going to rain.")
+else:
+    print("It is not going to rain at all!")
+
+# print(json.dumps(next_hour_rain_data, indent=2))
+# print(json.dumps(next_hour_rain_data, indent=2))
