@@ -1,9 +1,18 @@
 import time
-from turtle import Screen
+from turtle import Screen, Turtle
 import player
 import car_manager
 import scoreboard
 from scoreboard import Scoreboard
+
+
+# Constants
+LINES_SIZE = 50
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 700
+GAME_HEIGHT_LIMIT = SCREEN_HEIGHT - LINES_SIZE * 4
+KEEP_PLAYING = True
+
 
 
 def move_up_turtle():
@@ -15,12 +24,9 @@ def move_up_turtle():
                 player_turtle.move_up()
 
 
-# Constants
-LINES_SIZE = 50
-SCREEN_WIDTH = 1200
-SCREEN_HEIGHT = 900
-GAME_HEIGHT_LIMIT = SCREEN_HEIGHT - LINES_SIZE * 4
-KEEP_PLAYING = True
+def call_to_move_up_turtle(x, y):
+    move_up_turtle()
+
 
 
 # Setting up the screen
@@ -29,6 +35,7 @@ screen.setup(width=SCREEN_WIDTH, height=SCREEN_HEIGHT)
 screen.tracer(0)
 screen.listen()
 screen.onkeypress(move_up_turtle, "Up")
+screen.onscreenclick(call_to_move_up_turtle)
 
 # Setting up the player turtle
 player_turtle = player.Player(GAME_HEIGHT_LIMIT, lines_size=LINES_SIZE)
