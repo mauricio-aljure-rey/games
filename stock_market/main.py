@@ -13,9 +13,6 @@ threshold_limit = 0.01
 def print_news(news, num_news):
     msg = []
     for num in range(num_news):
-        # print("News num " + str(num+1))
-        # print("Title: " + data_news.json()["articles"][num]["title"])
-        # print("Brief: " + data_news.json()["articles"][num]["description"])
         msg.append("News num " + str(num+1) + "\n" +
                    "Title: " + html.unescape(data_news.json()["articles"][num]["title"]) + "\n" +
                    "Brief: " + html.unescape(data_news.json()["articles"][num]["description"]) + "\n")
