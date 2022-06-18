@@ -1,9 +1,20 @@
 import requests
 import json
+# import pywhatkit
+import flask
 
 
-lat = 59.329
-lon = 18.069
+# Rådsparken information
+lat_radsparken = 59.2409
+lon_radsparken = 17.9870
+
+# Stockholm information
+lat_stock = 59.329
+lon_stock = 18.069
+
+lat = lat_radsparken
+lon = lon_radsparken
+
 
 # Open Weather configuration
 API_key = "4c0855da321c0d905dc62f6e3a6c8cff"
@@ -37,6 +48,7 @@ data = answer.json()
 # First key is "time" in format "2022-05-21T13:00:00Z"
 # Key "data" is a dictionary with dictionaries.
 data = data["properties"]["timeseries"]
+print(json.dumps(data, indent=3))
 
 # Creating a new list of dictionaries with the information from the precipitation only.
 # This I might use later when attempting to forecast the solar panel productivity.
@@ -57,9 +69,11 @@ for item in next_hour_rain_data:
     if item["precipitation_amount"] > 0:
         raining_at.append({
             "day": item["time"].split("T")[0],
-            "hour": item["time"].split("T")[1][0:1],
+            "hour": item["time"].split("T")[1][0:2],
             "amount": item["precipitation_amount"]
         })
+
+# print(json.dumps(raining_at, indent=3))
 
 if raining_at:
     print("It is going to rain.")
