@@ -1,6 +1,8 @@
 # Time machine project.
 # - Scrap: Get the list of most heard songs of a particular year.
 # - Spotify: add them to a new playlist of spotify.
+# - The user id, user secret must be set as environment variables
+# SPOTIPY_CLIENT_ID and SPOTIPY_CLIENT_SECRET
 
 import tkinter
 from tkinter import simpledialog
