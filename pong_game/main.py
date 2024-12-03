@@ -1,3 +1,5 @@
+# Game taken from online course
+
 import turtle
 import paddle
 import ball

@@ -1,3 +1,5 @@
+# Game taken from online course
+
 import time
 from turtle import Screen, Turtle
 import player
